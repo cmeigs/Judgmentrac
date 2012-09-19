@@ -1,0 +1,29 @@
+﻿@model Judgmentrac.Models.Payment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Payment</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PayDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PayDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Amount)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Amount)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

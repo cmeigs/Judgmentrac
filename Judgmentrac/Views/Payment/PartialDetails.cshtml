@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Judgmentrac.Models.Payment>
+
+<tr>
+    <td colspan="4">
+    @if (Model.Count() == 0)
+    {
+        <text>No Payments Yet</text>
+    }
+    else
+    {
+        foreach (var payment in Model)
+        {
+            @payment.PayDate <text> - $</text> @payment.Amount <br />
+        }
+    }
+
+    <a href="/Payment/Create/@ViewBag.DisputeID">Add Payment</a>
+    <a href="#" class="payment-view-close">close</a>
+    </td>
+</tr>

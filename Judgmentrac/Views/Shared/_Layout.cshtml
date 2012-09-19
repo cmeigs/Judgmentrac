@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>JudgmenTrac - @ViewBag.Title</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("Scripts", required: false)
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <h1 class="site-title pull-left">@Html.ActionLink("Judgment Tracker", "Index", "Home")</h1>
+                <nav class="pull-right">
+                    <ul id="menu" class="pull-right">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Pricing & Signup", "Index", "Pricing")</li>
+                        <li>@Html.ActionLink("My Judgments", "Index", "Judgment")</li>
+                        @if (!WebSecurity.IsAuthenticated) {
+                            <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                        } else {
+                            <li>@Html.Partial("_LoginPartial")</li>
+                            <!--
+                            <li>@* Html.ActionLink("Logout", "LogOff", "Account") *@</li>
+                            -->
+                            }
+                    </ul>
+                </nav>
+            </div><!-- .container -->
+        </header>
+
+        <div id="body">
+            @RenderBody()
+        </div>
+        <footer>
+            <div class="container">
+                <div class="pull-left">
+                    <h2 class="title">JudgmenTrac</h2>
+                    <p>
+                        <a href="" class="foot-link">Home</a> | 
+                        <a href="" class="foot-link">Pricing & Signp</a> | 
+                        <a href="" class="foot-link">Support</a> | 
+                        <a href="" class="foot-link">Login</a>
+                    </p>
+                    <p>Copyright &copy; Ben Essig</p>
+                </div>
+                <div class="pull-right poweredby">
+                    <b>Powered By <a href="http://roundedco.com" target="_blank" class="foot-link">Rounded Development</a></b>
+                </div>
+            </div>
+    </footer>
+
+    </body>
+</html>

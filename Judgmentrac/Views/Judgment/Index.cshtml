@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Judgmentrac.ViewModels.DisputeViewModel>
+
+@{
+    ViewBag.Title = "My Judgments";
+}
+
+@{
+    var grid = new WebGrid(Model,
+        defaultSort:"Name", 
+        columnNames:new[]{"Name","Principal","Rate","StartDate"},
+        ajaxUpdateContainerId: "grid"
+    );
+}
+
+<div class="container" id="table-top">
+    <div class="pull-left">
+        <h4>Your Judgment Tracker</h4>
+    </div>
+    <div class="pull-right">
+        @Html.ActionLink("Create a new Judgment", "Create", "Judgment", new { @class = "btn btn-primary btn-xlarge" })    
+    </div>
+</div>
+
+<div class="container">
+    <table class="webgrid-table">
+        <thead>
+            <tr class="webgrid-header">
+                <th>Name</th>
+                <th>Principal</th>
+                <th>Rate</th>
+                <th>Amount Due</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Payments</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var disputeView in Model)
+        {
+            <tr>
+                <td>
+                    @Html.Hidden("disputeID", @disputeView.Dispute.ID)
+                    @disputeView.Dispute.Name
+                </td>
+                <td>$@disputeView.Dispute.Principal</td>
+                <td>@disputeView.Dispute.Rate%</td>
+                <td>$@(disputeView.Dispute.Principal - disputeView.PaymentTotal)</td>
+                <td>@disputeView.Dispute.StartDate.ToString("d")</td>
+                <td>@disputeView.Dispute.EndDate.ToString("d")</td>
+                <td>@disputeView.Dispute.Payments.Count</td>
+            </tr>
+            <tr><td colspan="7"><div class="payment-container"></div></td></tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+
+    // this will give us rollover functionality for the WebGrid
+    $('.webgrid-table tr').live('hover', function () {
+        $(this).toggleClass('clickable');
+    }).live('click', function () {
+        //console.log($(this));
+        $(this).next().find('.payment-container').load('/Payment/PartialDetails/' + $(this).find('#disputeID').val());
+    });
+
+    // close our dynamic row
+    $('.payment-view-close').live('click', function () {
+        $(this).parent().remove();
+        return false;
+    });
+</script>       
+}

@@ -1,0 +1,67 @@
+﻿@model Judgmentrac.Models.Dispute
+
+@{
+    ViewBag.Title = "Create a New Judgment";
+}
+
+<h2>Create Judgment</h2>
+
+<div class="errorMsg">
+    @ViewBag.ErrorMsg
+</div>
+
+<div>
+    @WebSecurity.CurrentUserName, you have @ViewBag.JudgmentCount Judgments available to create!
+</div>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Judgment</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Principal)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Principal)
+            @Html.ValidationMessageFor(model => model.Principal)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Rate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Rate)
+            @Html.ValidationMessageFor(model => model.Rate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StartDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StartDate)
+            @Html.ValidationMessageFor(model => model.StartDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EndDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EndDate)
+            @Html.ValidationMessageFor(model => model.EndDate)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
