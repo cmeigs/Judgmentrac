@@ -47,7 +47,10 @@ namespace Judgmentrac.Controllers
                 List<UserProfileJudgment> judgmentList = userProfileJudgment.ToList();
                 if (judgmentList.Count() > 0)
                 {
-                    ViewBag.JudgmentCount = judgmentList[0].JudgmentCount;
+                    int totalJudgmentCount = 0;
+                    foreach (UserProfileJudgment upj in judgmentList)
+                        totalJudgmentCount += upj.JudgmentCount;
+                    ViewBag.JudgmentCount = totalJudgmentCount;
                     return View("Create");
                 }
                 else
