@@ -5,13 +5,13 @@ namespace Judgmentrac.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class AddUserProfileModelTable : IMigrationMetadata
+    public sealed partial class UserProfileJudgmentAddition : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddUserProfileModelTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UserProfileJudgmentAddition));
         
         string IMigrationMetadata.Id
         {
-            get { return "201209191801446_AddUserProfileModelTable"; }
+            get { return "201209201630366_UserProfileJudgmentAddition"; }
         }
         
         string IMigrationMetadata.Source

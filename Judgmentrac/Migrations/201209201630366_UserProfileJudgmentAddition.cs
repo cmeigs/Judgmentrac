@@ -3,7 +3,7 @@ namespace Judgmentrac.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddUserProfileModelTable : DbMigration
+    public partial class UserProfileJudgmentAddition : DbMigration
     {
         public override void Up()
         {
@@ -11,10 +11,11 @@ namespace Judgmentrac.Migrations
                 "dbo.UserProfileJudgments",
                 c => new
                     {
+                        invoice = c.Int(nullable: false, identity: true),
                         UserId = c.Int(nullable: false),
                         JudgmentCount = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.UserId);
+                .PrimaryKey(t => t.invoice);
             
         }
         

@@ -632,13 +632,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209191801446_AddUserProfileModelTable.cs" />
-    <Compile Include="Migrations\201209191801446_AddUserProfileModelTable.Designer.cs">
-      <DependentUpon>201209191801446_AddUserProfileModelTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201209201603145_UserProfileJudgmentIndentity.cs" />
-    <Compile Include="Migrations\201209201603145_UserProfileJudgmentIndentity.Designer.cs">
-      <DependentUpon>201209201603145_UserProfileJudgmentIndentity.cs</DependentUpon>
+    <Compile Include="Migrations\201209201630366_UserProfileJudgmentAddition.cs" />
+    <Compile Include="Migrations\201209201630366_UserProfileJudgmentAddition.Designer.cs">
+      <DependentUpon>201209201630366_UserProfileJudgmentAddition.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -800,11 +796,8 @@
     <Content Include="Views\Judgment\NoJudgment.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201209191801446_AddUserProfileModelTable.resx">
-      <DependentUpon>201209191801446_AddUserProfileModelTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209201603145_UserProfileJudgmentIndentity.resx">
-      <DependentUpon>201209201603145_UserProfileJudgmentIndentity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201209201630366_UserProfileJudgmentAddition.resx">
+      <DependentUpon>201209201630366_UserProfileJudgmentAddition.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
