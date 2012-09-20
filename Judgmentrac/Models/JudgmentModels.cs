@@ -64,7 +64,8 @@ namespace Judgmentrac.Models
     public class UserProfileJudgment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int invoice { get; set; }
+        [Required]
         public int UserId { get; set; }
         [Required]
         public int JudgmentCount { get; set; }

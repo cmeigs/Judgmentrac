@@ -70,17 +70,22 @@ namespace Judgmentrac.Controllers
             //validate that it was Auth.net that posted this using the first 20 characters of the "MD5 hash" string specifiec in the settins admin pannel
             bool isValid = response.Validate(ConfigurationManager.AppSettings["AuthorizeMerchantHash"], ConfigurationManager.AppSettings["AuthorizeAPILoginID"]);
 
-            //ViewBag.Message = "Is Response Valid? " + isValid.ToString() +
-            //    ", Message: " + response.Message +
-            //    ", Invoice: " + response.InvoiceNumber +
-            //    ", ResponseCode: " + response.ResponseCode +
-            //    ", MD5Hash: " + response.MD5Hash +
-            //    ", MD5HashTruncated: " + response.MD5Hash.Substring(0, 20) +
-            //    ", AuthCode: " + response.AuthorizationCode +
-            //    ", Approved: " + response.Approved +
-            //    ", TransactionID: " + response.TransactionID +
-            //    ", CreditCard: " + response.CardNumber;
-            //return View();
+            //foreach (string key in post.Keys)
+            //    ViewBag.Message += "Key: " + key + "<br>";
+
+            ViewBag.Message = "Is Response Valid? " + isValid.ToString() +
+                ", Message: " + response.Message +
+                ", Invoice: " + response.InvoiceNumber +
+                ", ResponseCode: " + response.ResponseCode +
+                ", MD5Hash: " + response.MD5Hash +
+                ", MD5HashTruncated: " + response.MD5Hash.Substring(0, 20) +
+                ", AuthCode: " + response.AuthorizationCode +
+                ", Approved: " + response.Approved +
+                ", TransactionID: " + response.TransactionID +
+                ", CreditCard: " + response.CardNumber +
+                ", User ID: " + post.Get("x_cust_id") +
+                ", Num_Judgment(s): " + post.Get("num_judgment");
+            return View();
 
             //if it's not valid - just send them to the home page. Don't throw - that's how hackers figure out what's wrong :)
             if (!isValid)
@@ -90,6 +95,10 @@ namespace Judgmentrac.Controllers
                 string returnUrl = "";
                 if (!response.Approved)
                 {
+                    // get judgments purchased and add to database
+                    string numJudgmentPurchased = post.Get("num_judment");
+
+                    //does user have any existing 
                     //return RedirectToAction("Failure", "Commerce");
                     returnUrl = "http://judgment.azurewebsites.net/Commerce/Failure?m=" + response.Message;
                 }

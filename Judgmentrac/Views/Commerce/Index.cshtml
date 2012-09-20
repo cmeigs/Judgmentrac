@@ -2,6 +2,7 @@
     ViewBag.Title = "Purchase Judgments";
 }
 
+<div class="container">
 <form action='@System.Configuration.ConfigurationManager.AppSettings["AuthorizePostURL"]' method="post">
     <input type='hidden' name='x_login' id='x_login' value='3xH5Xwa7XK' />
 	<input type='hidden' name='x_fp_sequence' id='x_fp_sequence' value='@ViewBag.Invoice' /> <!-- will need to be identity of database table -->
@@ -9,36 +10,29 @@
     <input type='hidden' name='x_amount' id='x_amount' value='@ViewBag.TotalPrice' />
     <input type="hidden" name="x_fp_hash" id="x_fp_hash" value='@ViewBag.MD5Hash.ToString()' />
 	<input type='hidden' name='x_relay_url' value='http://judgment.azurewebsites.net/Commerce/DPM' />
-	<input type='hidden' name='x_relay_response' value='TRUE' />
-    <!-- EXAMPLE VALUES
-    <input type = 'hidden' name = 'x_fp_hashh' value = '29a7203cbcfcaa34710c436e500ed04f' \>
-	<input type = 'hidden' name = 'x_fp_sequencee' value = '620'\>
-	<input type = 'hidden' name = 'x_fp_timestampp' value = '1347974614' \>
-	<input type = 'hidden' name = 'x_loginn' value = 'xxx_key' \>
-	<input type = 'hidden' name = 'x_amountt' value = '1.99' \>
-	<input type = 'hidden' name = 'x_relay_urll' value = 'http://127.0.0.1:4768' \>
-	<input type = 'hidden' name = 'x_relay_responsee' value = 'TRUE' \>
-	-->
-    <input type='hidden' name='x_recurring_billing' value='FALSE' />
-    <input type='hidden' name='x_invoice_num' value='@ViewBag.Invoice' />
-    <input type='hidden' name='x_description' value='purchase of judgment' />
-    <input type='hidden' name='x_company' value='' />
-    <input type='hidden' name='x_country' value='' />
-    <input type='hidden' name='x_phone' value='' />
-    <input type='hidden' name='x_fax' value='' />
-    <input type='hidden' name='x_email' value='' />
-    <input type='hidden' name='x_cust_id' value='' />
-    <input type="hidden" name="order_id" id="order_id" value="1234" />    
-
+	<input type='hidden' name='x_relay_response' id='x_relay_response' value='TRUE' />
+    <input type='hidden' name='x_recurring_billing' id='x_recurring_billing' value='FALSE' />
+    <input type='hidden' name='x_invoice_num' id='x_invoice_num' value='@ViewBag.Invoice' />
+    <input type='hidden' name='x_description' id='x_description' value='Judgment Purchase' />
+    <input type='hidden' name='x_company' id='x_company' value='' />
+    <input type='hidden' name='x_country' id='x_country' value='' />
+    <input type='hidden' name='x_phone' id='x_phone' value='' />
+    <input type='hidden' name='x_fax' id='x_fax' value='' />
+    <input type='hidden' name='x_email' id='x_email' value='@WebSecurity.CurrentUserName' />
+    <input type='hidden' name='x_cust_id' id='x_cust_id' value='@WebSecurity.CurrentUserId' />
+    <!--
     <p><label>First Name:</label> <input type="text" name="x_first_name" /></p>
     <p><label>Last Name:</label> <input type="text" name="x_last_name" /></p>
     <p><label>Address:</label> <input type="text" name="x_address" /></p>
     <p><label>City:</label> <input type="text" name="x_city" /></p>
     <p><label>State:</label> <input type="text" name="x_state" /></p>
     <p><label>Zip:</label> <input type="text" name="x_zip" /></p>
+    -->
+    <p><label>Judgments to Purchase:</label> <input type="text" size="5" maxlength="5" name="num_judgment" id="num_judgment" value="1" /></p>
     <p><label>Credit Card Number:</label> <input type='text' size='28' name='x_card_num' id='x_card_num' value='4111111111111111' /></p>
     <p><label>Expiration:</label> <input type='text' size='5' maxlength='5' name='x_exp_date' id='x_exp_date' value='0116' /></p>
     <p><label>CCV</label> <input type='text' size='5' maxlength='5' name='x_card_code' id='x_card_code' value='123' /></p>
     
-    <input type="submit" value="Pay" />
+    <input type="submit" value="Purchase" class="btn btn-primary btn-xlarge" />
 </form>
+</div>

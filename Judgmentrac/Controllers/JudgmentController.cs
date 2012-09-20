@@ -44,10 +44,10 @@ namespace Judgmentrac.Controllers
                                           where upj.UserId == userID
                                           select upj;
 
-                IEnumerable<UserProfileJudgment> judgmentList = userProfileJudgment.ToList();
+                List<UserProfileJudgment> judgmentList = userProfileJudgment.ToList();
                 if (judgmentList.Count() > 0)
                 {
-                    ViewBag.JudgmentCount = judgmentList.Count();
+                    ViewBag.JudgmentCount = judgmentList[0].JudgmentCount;
                     return View("Create");
                 }
                 else
