@@ -80,6 +80,7 @@ hgroup .title {
 body {
     background-color: #FFF;
     padding-bottom: 35px;
+    padding-top:80px
 }
 
 header {
@@ -88,6 +89,52 @@ header {
     width: 100%;
     clear: both;
     background-color: #000;
+    position:fixed;
+    top:0;
+}
+
+.navbar
+{
+    margin-bottom:0;
+}
+.navbar > .navbar-inner
+{
+    background:#000;
+    color:#fff;
+    border:none;
+}
+.navbar .brand
+{
+    color:#fff;
+    text-shadow:none;
+}
+.navbar .nav > li > a
+{
+    color:#bbb;
+    text-shadow:none;
+}
+.navbar .nav > li > a:hover
+{
+    color:#fff;
+    text-shadow:none;
+}
+.navbar .nav li.dropdown.open > .dropdown-toggle, .navbar .nav li.dropdown.active > .dropdown-toggle, .navbar .nav li.dropdown.open.active > .dropdown-toggle
+{
+    background:transparent;
+    color:#fff;
+}
+.navbar .nav li.dropdown.open > .dropdown-toggle .caret, .navbar .nav li.dropdown.active > .dropdown-toggle .caret, .navbar .nav li.dropdown.open.active > .dropdown-toggle .caret {
+border-top-color: #fff;
+border-bottom-color: #fff;
+}
+.navbar .nav li.dropdown > .dropdown-toggle .caret {
+border-top-color: #bbb;
+border-bottom-color: #bbb;
+}
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a
+{
+    background:transparent;
+    color:#000;
 }
 .header-container {
     max-width: 960px;
@@ -151,16 +198,12 @@ footer .poweredby
     padding: 50px 0 30px;
 }
 #home-image {
-    position: relative;
     height: 350px;
 }
 #home-image img 
 {
     display: block;
-    position: absolute;
-    width: 780px;
-    bottom: -60px;
-    max-width: none;
+    width: 100%;
 }   
 #home-bottom  {
     background-color: #FFF;

@@ -1,15 +1,13 @@
 ﻿@if (Request.IsAuthenticated) {
     <text>
-        <div id="logoutForm">
-            <div class="pull-left">
-            Hello, 
-            </div>
-            <div class="pull-left">
-                @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })
-            </div>
-            <div class="pull-left">
-                @Html.ActionLink("Logout", "LogOff", "Account")
-            </div>
-        </div>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          Hello, Ben
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li>@Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })</li>
+      <li>@Html.ActionLink("Logout", "LogOff", "Account")</li>
+    </ul>
+  
     </text>
 }
