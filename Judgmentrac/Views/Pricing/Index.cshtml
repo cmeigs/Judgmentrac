@@ -28,15 +28,15 @@
                 </div>
             </div>
             <div class="right-content">
-                Anyone can sign up, and guess what? It’s free. There’s a simple, flat rate of just 20¢ per judgement. And we’ll hold on to it for seven years. That’s our guarantee. Or something like that.
+                Anyone can sign up, and guess what? It’s free. There’s a simple, flat rate of just $@System.Configuration.ConfigurationManager.AppSettings["JudgmentAmount"] per judgement. And we’ll hold on to it for seven years. That’s our guarantee. Or something like that.
                 <br />
                 <br />
                 <img src="../../Images/price_slider.png" alt="" />
             </div>
         </div>
         <div class="signup">
-            Free signup and only $0.20 per judgement.
-            <a class="btn btn-primary btn-xlarge">Sign me up</a>
+            Free signup and only $@System.Configuration.ConfigurationManager.AppSettings["JudgmentAmount"] per judgement.
+            <a href="../Account/Register" class="btn btn-primary btn-xlarge">Sign me up</a>
         </div>
     </div>
 </div>

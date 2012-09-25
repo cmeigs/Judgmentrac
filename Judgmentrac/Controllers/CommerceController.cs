@@ -31,25 +31,51 @@ namespace Judgmentrac.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            string amount = ConfigurationManager.AppSettings["JudgmentAmount"];
+            ViewBag.TotalPrice = amount;
+
+            return View();
+        }
+
+
+        // GET: /Commerce/Purchase
+        [Authorize]
+        [HttpPost]
+        public ActionResult Purchase(FormCollection postData)
+        {
             string apiLoginID = ConfigurationManager.AppSettings["AuthorizeAPILoginID"];
+            
+            // get amount of purchase
+            string amount = postData["x_amount"];
+            ViewBag.Amount = amount;
+            ViewBag.NumJudgment = postData["num_judgment"];
+
+            // Invoice: create a new UserProfileJudgment record that will become the invoice (after we hear back from Authorize.NET)
+            int invoice = 0;
+            using (var judgment = new JudgmentDB())
+            {
+                UserProfileJudgment userProfileJudgment = new UserProfileJudgment
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    JudgmentCount = 0
+                };
+                judgment.UserProfileJudgments.Add(userProfileJudgment);
+                if (judgment.SaveChanges() == 1)
+                    invoice = userProfileJudgment.invoice;
+            }
+            ViewBag.Invoice = invoice.ToString();
+
+            // generate timestamp for Authorize.NET
+            //string totalSeconds = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+            //string secondsRounded = totalSeconds.Substring(0, totalSeconds.IndexOf("."));
+            //ViewBag.Seconds = secondsRounded;
+            ViewBag.Seconds = AuthorizeNet.Crypto.GenerateTimestamp();
 
             /* Authorize.NET SDK methods to help with the direct post method (but not much documentation)
             AuthorizeNet.Crypto.GenerateSequence();
             AuthorizeNet.Crypto.GenerateFingerprint();
             */
 
-            // will eventually be identity
-            Random random = new Random();
-            string invoice = random.Next(1, 100).ToString();
-            ViewBag.Invoice = invoice;     
-            
-            //string totalSeconds = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
-            //string secondsRounded = totalSeconds.Substring(0, totalSeconds.IndexOf("."));
-            //ViewBag.Seconds = secondsRounded;
-            ViewBag.Seconds = AuthorizeNet.Crypto.GenerateTimestamp();
-
-            string amount = ConfigurationManager.AppSettings["JudgmentAmount"];
-            ViewBag.TotalPrice = amount;
             string hashSeed = apiLoginID + "^" + invoice + "^" + ViewBag.Seconds + "^" + amount + "^";
             string hashKey = ConfigurationManager.AppSettings["AuthorizeTransactionKey"];
 
@@ -59,7 +85,7 @@ namespace Judgmentrac.Controllers
             byte[] messageBytes = encoding.GetBytes(hashSeed);
             byte[] hashmessage = hmacmd5.ComputeHash(messageBytes);
             ViewBag.MD5Hash = ByteToString(hashmessage);
-            
+
             return View();
         }
 
@@ -97,24 +123,23 @@ namespace Judgmentrac.Controllers
                 string returnUrl = "";
                 if (response.Approved)
                 {
-                    // get judgments purchased and add to database
-                    UserProfileJudgment upj = new UserProfileJudgment
-                    {
-                        UserId = Convert.ToInt32(post.Get("x_cust_id")),
-                        JudgmentCount = Convert.ToInt32(post.Get("num_judgment"))
-                    };
+                    //get previously created invoice record and update with the correct judgments purchased
                     JudgmentDB db = new JudgmentDB();
-                    db.UserProfileJudgments.Add(upj);
+                    int userID = Convert.ToInt32(post.Get("x_cust_id"));
+                    var invoice = (
+                        from i in db.UserProfileJudgments
+                        where i.UserId == userID && i.JudgmentCount == 0
+                        select i).Single();
+                    invoice.JudgmentCount = Convert.ToInt32(post.Get("num_judgment"));
                     db.SaveChanges();
 
-                    //return RedirectToAction("Failure", "Commerce");
-                    returnUrl = "http://judgment.azurewebsites.net/Commerce/Success?m=" + response.Message;
+                    returnUrl = ConfigurationManager.AppSettings["AuthorizeReturnURL"] + "Commerce/Success?m=" + response.Message;
                 }
                 else
                 {
-                    //return RedirectToAction("Success", "Commerce");
-                    returnUrl = "http://judgment.azurewebsites.net/Commerce/Failure?m=" + response.Message;
+                    returnUrl = ConfigurationManager.AppSettings["AuthorizeReturnURL"] + "Commerce/Failure?m=" + response.Message;
                 }
+                
                 //the URL to redirect to- this MUST be absolute
                 return Content(AuthorizeNet.Helpers.CheckoutFormBuilders.Redirecter(returnUrl));
             }
