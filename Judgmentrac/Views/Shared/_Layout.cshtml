@@ -8,31 +8,34 @@
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
         @Scripts.Render("~/bundles/jquery")
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
         @RenderSection("Scripts", required: false)
     </head>
     <body>
         <header>
-            <div class="container">
-                <h1 class="site-title pull-left">@Html.ActionLink("Judgment Tracker", "Index", "Home")</h1>
-                <nav class="pull-right">
-                    <ul id="menu" class="pull-right">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    @Html.ActionLink("Judgment Tracker", "Index", "Home",htmlAttributes: new { @class = "brand" })
+                    <ul class="nav pull-right">
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                         <li>@Html.ActionLink("Pricing & Signup", "Index", "Pricing")</li>
                         <li>@Html.ActionLink("My Judgments", "Index", "Judgment")</li>
                         @if (!WebSecurity.IsAuthenticated) {
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
                         } else {
-                            <li>@Html.Partial("_LoginPartial")</li>
+                            <li class="dropdown">@Html.Partial("_LoginPartial")</li>
                             <!--
                             <li>@* Html.ActionLink("Logout", "LogOff", "Account") *@</li>
                             -->
                             }
                     </ul>
-                </nav>
-            </div><!-- .container -->
+                  </div>
+                </div>
+            </div>
+
         </header>
 
-        <div id="body">
+        <div id="body" class="section">
             @RenderBody()
         </div>
         <footer>

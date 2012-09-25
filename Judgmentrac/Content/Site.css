@@ -78,7 +78,7 @@ hgroup .title {
 /* main layout
 ----------------------------------------------------------*/
 body {
-    background-color: #FFF;
+    background-color: #000;
     padding-bottom: 35px;
 }
 
@@ -88,6 +88,51 @@ header {
     width: 100%;
     clear: both;
     background-color: #000;
+
+}
+
+.navbar
+{
+    margin-bottom:0;
+}
+.navbar > .navbar-inner
+{
+    background:#000;
+    color:#fff;
+    border:none;
+}
+.navbar .brand
+{
+    color:#fff;
+    text-shadow:none;
+}
+.navbar .nav > li > a
+{
+    color:#bbb;
+    text-shadow:none;
+}
+.navbar .nav > li > a:hover
+{
+    color:#fff;
+    text-shadow:none;
+}
+.navbar .nav li.dropdown.open > .dropdown-toggle, .navbar .nav li.dropdown.active > .dropdown-toggle, .navbar .nav li.dropdown.open.active > .dropdown-toggle
+{
+    background:transparent;
+    color:#fff;
+}
+.navbar .nav li.dropdown.open > .dropdown-toggle .caret, .navbar .nav li.dropdown.active > .dropdown-toggle .caret, .navbar .nav li.dropdown.open.active > .dropdown-toggle .caret {
+border-top-color: #fff;
+border-bottom-color: #fff;
+}
+.navbar .nav li.dropdown > .dropdown-toggle .caret {
+border-top-color: #bbb;
+border-bottom-color: #bbb;
+}
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a
+{
+    background:transparent;
+    color:#000;
 }
 .header-container {
     max-width: 960px;
@@ -137,7 +182,11 @@ footer .poweredby
     color: Red;
     font-weight: bold;
 }
-
+.section
+{
+    background:#fff;
+    padding:0px 0 200px 0;
+}
 
 /* home page
 ----------------------------------------------------------*/
@@ -151,16 +200,12 @@ footer .poweredby
     padding: 50px 0 30px;
 }
 #home-image {
-    position: relative;
     height: 350px;
 }
 #home-image img 
 {
     display: block;
-    position: absolute;
-    width: 780px;
-    bottom: -60px;
-    max-width: none;
+    width: 100%;
 }   
 #home-bottom  {
     background-color: #FFF;
@@ -264,34 +309,63 @@ footer .poweredby
     }
 
 
-/* webgrid / My Judgements
-----------------------------------------------------------*/
-#table-top 
+/* My Judgements*/
+----------------------------------------------------------
+
+.title-section
 {
-    white-space: nowrap;
-    vertical-align: middle;
-    padding: 5px;
+    padding:30px 0;
 }
-.webgrid-table {
-    background-color: #FFF;
-    border-collapse: collapse;
-    width: 100%;
+.table th
+{
+    font-size:16px;
 }
-.webgrid-table thead th{
-    background-color: #4F4F4F;
-    color: white;
-    padding: 10px;
-    text-align: center;
+.table-header-section
+{
+    background:#4f4f4f;
 }
-.webgrid-table tbody tr td{
-    text-align: center;
+.header-table
+{
+    color:#fff;
+    font-size:18px;
+    margin:10px 0;
 }
-.clickable {
-    cursor: pointer;
-    background: #ffff99;
+.main-table thead
+{
+    display:none;
+}
+.table td
+{
+    font-size:17px;
+    
+}
+.table td, .table th
+{
+    text-align:right;
+    width:12%;
+}
+.table td.left, .table th.left
+{
+    text-align:left;
+    width:28%;
 }
 
+.main-table td
+{
+ 
+    padding:15px 0;
+}
 
+.main-table tr:hover
+{
+    background:#fdfdfd;
+    cursor:pointer;
+}
+.main-table tr.payments td
+{
+    border-top:0px;
+    background:#fdfdfd;
+}
 /* menu
 ----------------------------------------------------------*/
 #menu {
