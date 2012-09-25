@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Judgmentrac.Models.Payment>
 
-<tr>
+@*<tr class="payments">*@
     <td colspan="4">
     @if (Model.Count() == 0)
     {
@@ -15,6 +15,6 @@
     }
 
     <a href="/Payment/Create/@ViewBag.DisputeID">Add Payment</a>
-    <a href="#" class="payment-view-close">close</a>
+    <a href="#" class="btn close">close</a>
     </td>
-</tr>
+@*</tr>*@

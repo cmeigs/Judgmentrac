@@ -11,65 +11,94 @@
         ajaxUpdateContainerId: "grid"
     );
 }
-
-<div class="container" id="table-top">
-    <div class="pull-left">
-        <h4>Your Judgment Tracker</h4>
+<div class="section">
+    <div class="container title-section">
+        <div class="pull-left">
+            <h4>Your Judgment Tracker</h4>
+        </div>
+        <div class="pull-right">
+            @Html.ActionLink("Create a new Judgment", "Create", "Judgment", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-xlarge" })    
+        </div>
     </div>
-    <div class="pull-right">
-        @Html.ActionLink("Create a new Judgment", "Create", "Judgment", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-xlarge" })    
+    <div class="table-header-section">
+        <div class="container">
+            <table class="header-table table">
+                <thead>
+                    <tr class="webgrid-header">
+                            <th class="left" style="width:28%">Name</th>
+                            <th>Principal</th>
+                            <th>Rate</th>
+                            <th>Amount Due</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Payments</th>
+                    </tr>
+                </thead>
+             </table>
+
+        </div>
+    </div>
+    <div class="container">
+        <table class="main-table table">
+            <thead>
+                <tr class="webgrid-header">
+                   
+                        <th class="left" style="width:28%"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var disputeView in Model)
+            {
+                <tr>
+                    <td class="left">
+                        @Html.Hidden("disputeID", @disputeView.Dispute.ID)
+                        @disputeView.Dispute.Name
+                    </td>
+                    <td>$@disputeView.Dispute.Principal</td>
+                    <td>@disputeView.Dispute.Rate%</td>
+                    <td>$@(disputeView.Dispute.Principal - disputeView.PaymentTotal)</td>
+                    <td>@disputeView.Dispute.StartDate.ToString("d")</td>
+                    <td>@disputeView.Dispute.EndDate.ToString("d")</td>
+                    <td>@disputeView.Dispute.Payments.Count</td>
+     
+                </tr>
+            }
+            </tbody>
+        </table>
     </div>
 </div>
-
-<div class="container">
-    <table class="webgrid-table">
-        <thead>
-            <tr class="webgrid-header">
-                <th>Name</th>
-                <th>Principal</th>
-                <th>Rate</th>
-                <th>Amount Due</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Payments</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var disputeView in Model)
-        {
-            <tr>
-                <td>
-                    @Html.Hidden("disputeID", @disputeView.Dispute.ID)
-                    @disputeView.Dispute.Name
-                </td>
-                <td>$@disputeView.Dispute.Principal</td>
-                <td>@disputeView.Dispute.Rate%</td>
-                <td>$@(disputeView.Dispute.Principal - disputeView.PaymentTotal)</td>
-                <td>@disputeView.Dispute.StartDate.ToString("d")</td>
-                <td>@disputeView.Dispute.EndDate.ToString("d")</td>
-                <td>@disputeView.Dispute.Payments.Count</td>
-            </tr>
-            <tr><td colspan="7"><div class="payment-container"></div></td></tr>
-        }
-        </tbody>
-    </table>
-</div>
-
 @section Scripts{
 <script type="text/javascript">
+    // Table row handler - open / close payments
+    $(".main-table tr:not('.payments')").live('click', function () {
+        var $this = $(this)
 
-    // this will give us rollover functionality for the WebGrid
-    $('.webgrid-table tr').live('hover', function () {
-        $(this).toggleClass('clickable');
-    }).live('click', function () {
-        //console.log($(this));
-        $(this).next().find('.payment-container').load('/Payment/PartialDetails/' + $(this).find('#disputeID').val());
+        if ($this.next()[0] === $('.payments')[0]) {
+            closePayments($('.payments .close'));
+        }
+        else {
+            closePayments($('.payments .close'));
+            var popDown = $('<tr class="payments" />').load('/Payment/PartialDetails/' + $this.find('#disputeID').val());
+            $this.after(popDown);
+        }
     });
 
-    // close our dynamic row
-    $('.payment-view-close').live('click', function () {
-        $(this).parent().remove();
-        return false;
+    // Close button handler
+    $('.payments .close').live('click', function (e) {
+        e.preventDefault();
+        closePayments($(this));
     });
+
+    // Close (remove) payments
+    var closePayments = function (node) {
+        node.closest('tr.payments').remove()
+    };
 </script>       
 }

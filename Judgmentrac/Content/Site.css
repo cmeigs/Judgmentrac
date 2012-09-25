@@ -80,7 +80,6 @@ hgroup .title {
 body {
     background-color: #000;
     padding-bottom: 35px;
-    padding-top:80px
 }
 
 header {
@@ -89,8 +88,7 @@ header {
     width: 100%;
     clear: both;
     background-color: #000;
-    position:fixed;
-    top:0;
+
 }
 
 .navbar
@@ -184,7 +182,11 @@ footer .poweredby
     color: Red;
     font-weight: bold;
 }
-
+.section
+{
+    background:#fff;
+    padding:0px 0 200px 0;
+}
 
 /* home page
 ----------------------------------------------------------*/
@@ -307,34 +309,63 @@ footer .poweredby
     }
 
 
-/* webgrid / My Judgements
-----------------------------------------------------------*/
-#table-top 
+/* My Judgements*/
+----------------------------------------------------------
+
+.title-section
 {
-    white-space: nowrap;
-    vertical-align: middle;
-    padding: 5px;
+    padding:30px 0;
 }
-.webgrid-table {
-    background-color: #FFF;
-    border-collapse: collapse;
-    width: 100%;
+.table th
+{
+    font-size:16px;
 }
-.webgrid-table thead th{
-    background-color: #4F4F4F;
-    color: white;
-    padding: 10px;
-    text-align: center;
+.table-header-section
+{
+    background:#4f4f4f;
 }
-.webgrid-table tbody tr td{
-    text-align: center;
+.header-table
+{
+    color:#fff;
+    font-size:18px;
+    margin:10px 0;
 }
-.clickable {
-    cursor: pointer;
-    background: #ffff99;
+.main-table thead
+{
+    display:none;
+}
+.table td
+{
+    font-size:17px;
+    
+}
+.table td, .table th
+{
+    text-align:right;
+    width:12%;
+}
+.table td.left, .table th.left
+{
+    text-align:left;
+    width:28%;
 }
 
+.main-table td
+{
+ 
+    padding:15px 0;
+}
 
+.main-table tr:hover
+{
+    background:#fdfdfd;
+    cursor:pointer;
+}
+.main-table tr.payments td
+{
+    border-top:0px;
+    background:#fdfdfd;
+}
 /* menu
 ----------------------------------------------------------*/
 #menu {
