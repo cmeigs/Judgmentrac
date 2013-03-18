@@ -14,10 +14,11 @@
 <div class="section">
     <div class="container title-section">
         <div class="pull-left">
-            <h4>Your Judgment Tracker</h4>
+            <h4>@User.Identity.Name, you have @ViewBag.JudgmentCount judgments available for use</h4>
         </div>
         <div class="pull-right">
-            @Html.ActionLink("Create a new Judgment", "Create", "Judgment", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-xlarge" })    
+            @Html.ActionLink("Purchase Judgments", "Index", "Commerce", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-medium" })
+            @Html.ActionLink("Create Judgment", "Create", "Judgment", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-medium" })    
         </div>
     </div>
     <div class="table-header-section">
@@ -25,80 +26,149 @@
             <table class="header-table table">
                 <thead>
                     <tr class="webgrid-header">
-                            <th class="left" style="width:28%">Name</th>
+                            <th class="expand"></th>
+                            <th class="dispute-name">@Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })</th>
                             <th>Principal</th>
                             <th>Rate</th>
-                            <th>Amount Due</th>
-                            <th>Start</th>
-                            <th>End</th>
+                            <th>Interest</th>
+                            <th>Due</th>
+                            <th>@Html.ActionLink("Start", "Index", new { sortOrder = ViewBag.StartSortParm })</th>
+                            <th>@Html.ActionLink("End", "Index", new { sortOrder = ViewBag.EndSortParm })</th>
                             <th>Payments</th>
+                            <th></th>
                     </tr>
                 </thead>
              </table>
-
         </div>
     </div>
     <div class="container">
+        <div class="errorMsg">@ViewBag.ErrorMessage</div>
         <table class="main-table table">
             <thead>
-                <tr class="webgrid-header">
-                   
-                        <th class="left" style="width:28%"></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                   
+                <tr>
+                    <th class="expand"></th>
+                    <th class="dispute-name"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
             @foreach (var disputeView in Model)
             {
-                <tr>
-                    <td class="left">
+                <tr class="dispute-parent-row">
+                    <td class="expand">
+                        <i class="icon-chevron-right"></i>
+                        <i class="icon-chevron-down" style="display:none"></i>
+                    </td>
+                    <td class="dispute-name">
                         @Html.Hidden("disputeID", @disputeView.Dispute.ID)
                         @disputeView.Dispute.Name
                     </td>
                     <td>$@disputeView.Dispute.Principal</td>
                     <td>@disputeView.Dispute.Rate%</td>
-                    <td>$@(disputeView.Dispute.Principal - disputeView.PaymentTotal)</td>
+                    <td>$@Math.Round(disputeView.InterestTotal, 2)</td>
+                    <td>$@Math.Round(disputeView.Dispute.Principal - disputeView.PaymentTotal + disputeView.InterestTotal, 2)</td>
                     <td>@disputeView.Dispute.StartDate.ToString("d")</td>
                     <td>@disputeView.Dispute.EndDate.ToString("d")</td>
                     <td>@disputeView.Dispute.Payments.Count</td>
-     
+                    <td><i class="icon-trash"></i></td>
                 </tr>
             }
             </tbody>
         </table>
     </div>
 </div>
+
 @section Scripts{
 <script type="text/javascript">
-    // Table row handler - open / close payments
-    $(".main-table tr:not('.payments')").live('click', function () {
+    // handle row click
+    $(".main-table tr.dispute-parent-row").live('click', function () {
         var $this = $(this)
 
-        if ($this.next()[0] === $('.payments')[0]) {
-            closePayments($('.payments .close'));
+        // remove any error message if it exists
+        var errorRow = $('.main-table tr.error-row');
+        if (errorRow.length) errorRow.remove();
+
+        // Table row handler - open / close payments
+        if ($this.next()[0] === $('.payments')[0] && $('.payments').length) {
+            closePayments($('.payments'));
         }
         else {
-            closePayments($('.payments .close'));
+            closePayments($('.payments'));
             var popDown = $('<tr class="payments" />').load('/Payment/PartialDetails/' + $this.find('#disputeID').val());
             $this.after(popDown);
-        }
-    });
 
-    // Close button handler
-    $('.payments .close').live('click', function (e) {
-        e.preventDefault();
-        closePayments($(this));
+            // toggle chevron icons
+            var previousRow = popDown.prev('tr');
+            previousRow.find('i.icon-chevron-right').hide();
+            previousRow.find('i.icon-chevron-down').show();
+        }
+
+        // toggle expand arrow
+        //$this.find(".expand i").toggle();
     });
 
     // Close (remove) payments
     var closePayments = function (node) {
-        node.closest('tr.payments').remove()
+        // toggle chevron icons
+        var previousRow = node.prev('tr');
+        previousRow.find('i.icon-chevron-down').hide();
+        previousRow.find('i.icon-chevron-right').show();
+
+        node.closest('tr.payments').remove();
     };
+
+    // user is attempting to delete judgment
+    $('tr.dispute-parent-row td .icon-trash').live('click', function (event) {
+        event.stopPropagation();
+        var answer = confirm("Are you sure you want to delete this Judgment?")
+        if (answer) {
+            closePayments($('.payments'));
+            var disputeRow = $(this).closest('tr');
+            var disputeID = disputeRow.find('input#disputeID').val();
+            $.ajax({
+                type: "POST",
+                url: "/Judgment/Delete/" + disputeID,
+                success: function (data) {
+                    if (data == "True") {
+                        disputeRow.remove();
+                    } else {
+                        disputeRow.after("<tr class='error-row'><td colspan='10'><div class='errorMsg' style='text-align:center'>Error attempting to remove Judgment, please try again</div></td></tr>");
+                    }
+                },
+                error: function (data) {
+                    disputeRow.after("<tr class='error-row'><td colspan='10'><div class='errorMsg' style='text-align:center'>Error attempting to remove Judgment, please try again</div></td></tr>");
+                }
+            });
+        }
+    });
+
+    // user is trying to delete a judgment payment
+    $('tr.payments i.icon-trash').live('click', function (event) {
+        event.stopPropagation();
+        var answer = confirm("Are you sure you want to delete this payment?");
+        if (answer) {
+            var paymentRow = $(this).closest('tr');
+            var paymentID = paymentRow.find('input#paymentID').val();
+            $.ajax({
+                type: "POST",
+                url: "/Payment/Delete/" + paymentID,
+                success: function (data) {
+                    if (data == "True") {
+                        paymentRow.remove();
+                    }
+                } //,
+                //error: function (data) {
+                //    console.log("failure payment delete");
+                //}
+            });
+        }
+    });
 </script>       
 }

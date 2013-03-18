@@ -13,5 +13,10 @@ namespace Judgmentrac.Controllers
         {
             return View();
         }
+
+        public ActionResult TOS()
+        {
+            return View();
+        }
     }
 }

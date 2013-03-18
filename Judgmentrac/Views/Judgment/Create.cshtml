@@ -3,64 +3,81 @@
 @{
     ViewBag.Title = "Create a New Judgment";
 }
-<div class="container">
-    <p>
-        @WebSecurity.CurrentUserName, you have @ViewBag.JudgmentCount judgment(s) available to create!
-    </p>
+<div class="container" id="payment-container">
+    <div id="paymentForm">
+        <hgroup class="title">
+            <h1>@ViewBag.Title</h1>
+        </hgroup>
+        
+        <p>
+            You have <b>@ViewBag.JudgmentCount</b> judgment(s) available to create
+            <br /><br />
+        </p>
 
-    <div class="errorMsg">
-        @ViewBag.ErrorMsg
+        <div class="errorMsg">
+            @ViewBag.ErrorMsg
+        </div>
+
+        @using (Html.BeginForm()) {
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>Judgment</legend>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Principal)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Principal)
+                    @Html.ValidationMessageFor(model => model.Principal)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Rate)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Rate)
+                    @Html.ValidationMessageFor(model => model.Rate)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.StartDate)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.StartDate)
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EndDate)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+
+                <p>
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    @Html.ActionLink("Cancel", "Index", "Judgment", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" }) 
+                </p>
+            </fieldset>
+        }
     </div>
-
-    @using (Html.BeginForm()) {
-        @Html.ValidationSummary(true)
-
-        <fieldset>
-            <legend>Judgment</legend>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Name)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </div>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Principal)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Principal)
-                @Html.ValidationMessageFor(model => model.Principal)
-            </div>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Rate)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Rate)
-                @Html.ValidationMessageFor(model => model.Rate)
-            </div>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.StartDate)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.StartDate)
-                @Html.ValidationMessageFor(model => model.StartDate)
-            </div>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.EndDate)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.EndDate)
-                @Html.ValidationMessageFor(model => model.EndDate)
-            </div>
-
-            <p>
-                <input type="submit" value="Create" />
-            </p>
-        </fieldset>
-    }
 </div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(function () {
+        $("#StartDate").datepicker();
+        $("#EndDate").datepicker();
+    });
+</script>
+}

@@ -153,9 +153,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="WebActivator">
-      <HintPath>..\packages\WebActivator.1.2.0.0\lib\NETFramework40\WebActivator.dll</HintPath>
-    </Reference>
     <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
@@ -212,10 +209,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JudgmentController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
-    <Compile Include="Controllers\PricingController.cs" />
+    <Compile Include="Controllers\SuperController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210092027211_DisputeIsActive.cs" />
+    <Compile Include="Migrations\201210092027211_DisputeIsActive.Designer.cs">
+      <DependentUpon>201210092027211_DisputeIsActive.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -225,6 +226,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_100_000000_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_100_eeeeee_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_55_dddddd_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_75_dadada_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-bg_inset-soft_95_fef1ec_1x100.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\jqueryui_essig\images\ui-icons_eeeeee_256x240.png" />
+    <Content Include="Content\jqueryui_essig\jqueryui_essig.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -283,6 +299,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\easy-intuitive.png" />
     <Content Include="Images\fit-your-needs.png" />
+    <Content Include="Images\glyphicons-halflings.png" />
     <Content Include="Images\green_circle.png" />
     <Content Include="Images\judgment-price.png" />
     <Content Include="Images\macbook.png" />
@@ -293,8 +310,8 @@
     <Content Include="Scripts\jquery-1.8.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.8.1.js" />
     <Content Include="Scripts\jquery-1.8.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.23.js" />
+    <Content Include="Scripts\jquery-ui-1.8.23.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
@@ -321,7 +338,6 @@
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
-    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
@@ -335,22 +351,17 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Pricing\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Judgment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Judgment\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Payment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payment\Details.cshtml" />
@@ -375,6 +386,16 @@
     <Content Include="Views\Commerce\DPM.cshtml" />
     <Content Include="Views\Commerce\Failure.cshtml" />
     <Content Include="Views\Judgment\NoJudgment.cshtml" />
+    <Content Include="Views\Home\TOS.cshtml" />
+    <Content Include="Views\Commerce\Purchase.cshtml" />
+    <Content Include="Views\Account\ManageEmail.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\PasswordConfirm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201210092027211_DisputeIsActive.resx">
+      <DependentUpon>201210092027211_DisputeIsActive.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -392,7 +413,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>9546</DevelopmentServerPort>
+          <DevelopmentServerPort>20263</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

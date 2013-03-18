@@ -3,28 +3,33 @@
     ViewBag.Title = "Account Registration";
 }
 
-<div class="container">
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
+<div class="container" id="register-container">
+    <div id="registerForm">
+        <hgroup class="title">
+            <h1>@ViewBag.Title</h1>
+        </hgroup>
 
-        <fieldset>
-            <legend>Registration Form</legend>
-            <ol>
-                <li>
+        @using (Html.BeginForm()) {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+
+            <fieldset>
+                <legend>Registration Form</legend>
+                <p>
                     @Html.LabelFor(m => m.UserName)
                     @Html.TextBoxFor(m => m.UserName)
-                </li>
-                <li>
+                </p>
+                <p>
                     @Html.LabelFor(m => m.Password)
                     @Html.PasswordFor(m => m.Password)
-                </li>
-                <li>
+                </p>
+                <p>
                     @Html.LabelFor(m => m.ConfirmPassword)
                     @Html.PasswordFor(m => m.ConfirmPassword)
-                </li>
-            </ol>
-            <input type="submit" value="Register" class="btn btn-primary btn-xlarge" />
-        </fieldset>
-    }
+                </p>
+                <input type="submit" value="Register" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" }) 
+            </fieldset>
+        }
+    </div>
 </div>

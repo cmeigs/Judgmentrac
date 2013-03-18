@@ -2,21 +2,60 @@
     ViewBag.Title = "Purchase Judgments";
 }
 
-<div class="container">
-    @using (Html.BeginForm("Purchase", "Commerce", FormMethod.Post))
-    {
-        <input type="hidden" name="judgment_price" id="judgment_price" value='@System.Configuration.ConfigurationManager.AppSettings["JudgmentAmount"]' />
-        <p><label>Judgments to Purchase:</label> <input type="text" name="num_judgment" id="num_judgment" value="1" /></p>
-        <p><label>Price:</label> <input type='text' name='x_amount' id='x_amount' value='@ViewBag.TotalPrice' readonly="readonly" /></p>
-        <p><input type="submit" value="Checkout" class="btn btn-primary btn-xlarge" /></p>
-    }
+<div class="container" id="register-container">
+    <div id="registerForm">
+        <hgroup class="title">
+            <h1>@ViewBag.Title</h1>
+        </hgroup>
+
+        @using (Html.BeginForm("Purchase", "Commerce", FormMethod.Post, new { @id = "purchase-form" }))
+        {
+            <input type="hidden" name="judgment_price" id="judgment_price" value='@System.Configuration.ConfigurationManager.AppSettings["JudgmentAmount"]' />
+            <p><label for="num_judgment">Judgments to Purchase:</label> <input type="text" name="num_judgment" id="num_judgment" value="1" class="required" /></p>
+            <p><label>Price:</label> <input type='text' name='x_amount' id='x_amount' value='@ViewBag.TotalPrice' readonly="readonly" /></p>
+            <p><input type="submit" value="Checkout" class="btn btn-primary" /></p>
+        }
+    </div>
 </div>
 
+@section Scripts{
 <script type="text/javascript">
-    //$('#num_judgment').blur(function () {
+    $(document).ready(function () {
+        // add integer method to jQuery validate
+        $.validator.addMethod('integer', function (value, element, param) {
+            return (value != 0) && (value == parseInt(value, 10));
+        });
+
+        // add positiveInt method to jQuery validate
+        $.validator.addMethod('positiveInt', function (value) {
+            return value > 0;
+        });
+
+        $("#purchase-form").validate({
+            onkeyup: false,
+            onclick: false,
+            //onblur: false,
+            rules: {
+                num_judgment: {
+                    required: true,
+                    integer: true,
+                    positiveInt: true
+                }
+            },
+            messages: {
+                num_judgment: {
+                    required: "You must enter a number to purchase",
+                    integer: "Value must be a whole number",
+                    positiveInt: "Value must be positive"
+                }
+            }
+        });
+    });
+</script>
+}
+<script type="text/javascript">
     $('#num_judgment').change(function () {
         var totalPrice = parseInt($('#judgment_price').val()) * parseInt($('#num_judgment').val());
         $('#x_amount').val(totalPrice);
     });
-</script>
- 
+</script> 

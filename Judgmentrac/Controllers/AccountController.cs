@@ -10,12 +10,15 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using Judgmentrac.Filters;
 using Judgmentrac.Models;
+using System.Net.Mail;
+using System.Net;
+using System.Configuration;
 
 namespace Judgmentrac.Controllers
 {
     [Authorize]
     [InitializeSimpleMembership]
-    public class AccountController : Controller
+    public class AccountController : SuperController
     {
         // GET: /Account/Login
         [AllowAnonymous]
@@ -33,7 +36,10 @@ namespace Judgmentrac.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
-                return RedirectToLocal(returnUrl);
+                if (returnUrl == null)
+                    return RedirectToLocal("/Judgment");
+                else
+                    return RedirectToLocal(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form
@@ -110,21 +116,50 @@ namespace Judgmentrac.Controllers
             return RedirectToAction("Manage", new { Message = message });
         }
 
-        
+
+        // GET: /Account/ManageEmail
+        public ActionResult ManageEmail()
+        {
+            ViewBag.TotalJudgments = GetJudgmentCount();
+            return View();
+        }
+
+
+        // POST: /Account/ManageEmail
+        [HttpPost]
+        public ActionResult ManageEmail(FormCollection form)
+        {
+            try
+            {
+                //MembershipUser mu = Membership.GetUser();
+                //string password = mu.GetPassword();
+
+                UsersContext dbUser = new UsersContext();
+                UserProfile user = dbUser.UserProfiles.Find(WebSecurity.CurrentUserId);
+                user.UserName = form["txtEmailAddress"].ToString();
+                dbUser.SaveChanges();
+                WebSecurity.Logout();
+                
+                ViewBag.StatusMessage = "Email successfully changed";
+                return View();
+            }
+            catch
+            {
+                ViewBag.ErrorMessage = "Error saving email, please try again";
+                return View();
+            }
+        }
+
+
         // GET: /Account/Manage
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed"
+                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set"
+                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed"
                 : "";
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             ViewBag.ReturnUrl = Url.Action("Manage");
-
-            //get number of available judgments here and return to view
-            
-
             return View();
         }
 
@@ -135,7 +170,7 @@ namespace Judgmentrac.Controllers
         public ActionResult Manage(LocalPasswordModel model)
         {
             bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            ViewBag.HasLocalPassword = hasLocalAccount;
+            //ViewBag.HasLocalPassword = hasLocalAccount;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalAccount)
             {
@@ -190,7 +225,97 @@ namespace Judgmentrac.Controllers
             return View(model);
         }
 
-        
+
+        // GET: /Account/ForgotPassword
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        // POST: /Account/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(FormCollection form)
+        {
+            List<UserProfile> userList;
+            string email = form["txtEmailAddress"].ToString();
+            using (UsersContext dbUser = new UsersContext())
+            {
+                var user = from u in dbUser.UserProfiles
+                            where u.UserName == email
+                            select u;
+                userList = user.ToList();
+            }
+
+            if (userList.Count > 0)
+            {
+                string passwordToken = WebSecurity.GeneratePasswordResetToken(email);
+                GeneratePasswordEmail(email, passwordToken);
+                ViewBag.StatusMessage = "Password reset email has been sent";
+            }
+            else
+                ViewBag.ErrorMessage = "Email Address does not exist";
+            
+            return View("ForgotPassword");
+        }
+
+
+        [AllowAnonymous]
+        public ActionResult PasswordConfirm(string id)
+        {
+            PasswordResetModel prm = new PasswordResetModel
+            {
+                Token = id
+            };
+            return View(prm);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult SetNewPassword(PasswordResetModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (WebSecurity.ResetPassword(model.Token, model.Password))
+                    ViewBag.StatusMessage = "Password successfully reset";
+                else
+                    ViewBag.ErrorMessage = "Error resetting password, your token may have expired, please try again";
+            }
+            return View("PasswordConfirm");
+        }
+
+
+        private bool GeneratePasswordEmail(string email, string passwordToken)
+        {
+            string returnURL = "http://" + this.Request.Url.Authority + "/Account/PasswordConfirm/" + passwordToken;
+                
+            MailMessage Email = new MailMessage("noreply@jusgmentrac.com", email);
+            Email.Subject = "JudgmenTrac Password Reset";
+            Email.Body = "Click <a href='" + returnURL + "'>here</a> to reset your JudgmenTrac password";
+            Email.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient(ConfigurationManager.AppSettings["SMTPAddress"], 25);
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["SendGridUserName"], ConfigurationManager.AppSettings["SendGridPassword"]);
+            try
+            {
+                client.Send(Email);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                Email.Dispose();
+            }
+            return true;
+        }
+
+
         // POST: /Account/ExternalLogin
         //[HttpPost]
         //[AllowAnonymous]

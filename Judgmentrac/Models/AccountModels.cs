@@ -26,13 +26,16 @@ namespace Judgmentrac.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
+
+        [Display(Name = "Email Address")]
         public string UserName { get; set; }
+
     }
 
     public class RegisterExternalLoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Email Address")]
         public string UserName { get; set; }
 
         public string ExternalLoginData { get; set; }
@@ -60,7 +63,7 @@ namespace Judgmentrac.Models
     public class LoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Email Address")]
         public string UserName { get; set; }
 
         [Required]
@@ -96,5 +99,22 @@ namespace Judgmentrac.Models
         public string Provider { get; set; }
         public string ProviderDisplayName { get; set; }
         public string ProviderUserId { get; set; }
+    }
+
+    public class PasswordResetModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "The password must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password (at least 6 characters)")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string Token { get; set; }
     }
 }

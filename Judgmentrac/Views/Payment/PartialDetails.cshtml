@@ -1,20 +1,32 @@
 ﻿@model IEnumerable<Judgmentrac.Models.Payment>
 
-@*<tr class="payments">*@
-    <td colspan="4">
+<td colspan="2">&nbsp;</td>
+<td colspan="5">
     @if (Model.Count() == 0)
     {
         <text>No Payments Yet</text>
     }
     else
     {
-        foreach (var payment in Model)
+        <table>
+            <tr>
+                <td>Date</td>
+                <td>Payment</td>
+            </tr>
+        @foreach (var payment in Model)
         {
-            @payment.PayDate <text> - $</text> @payment.Amount <br />
+            <tr>
+                <td>@payment.PayDate.ToString("d")</td>
+                <td>$@payment.Amount</td>
+                <td>
+                    @Html.Hidden("paymentID", @payment.ID)
+                    <i class="icon-trash"></i>
+                </td>
+            </tr>
         }
+        </table>
     }
-
-    <a href="/Payment/Create/@ViewBag.DisputeID">Add Payment</a>
-    <a href="#" class="btn close">close</a>
-    </td>
-@*</tr>*@
+</td>
+<td colspan="2">
+    <a href="/Payment/Create/@ViewBag.DisputeID" class="btn btn-primary">Add Payment</a>
+</td>

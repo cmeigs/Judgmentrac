@@ -3,7 +3,14 @@
   <Role name="WorkerRole1">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=nightlyprocess;AccountKey=m40MDEwD7TL+DpzZZb9bBEaew6EoByf4UGVmyTissh7A69DjPbZe3vtZbdeveeTgn7zVnDU/sw5DpyGzACJqOw==" />
+
+      <!-- For local storage emulator 
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      -->
+
+      <!-- For production blob storage - Where AccountName is the name of the Windows Azure storage account, and AccountKey is the access key for the storage account (both can be found in management console) -->
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=nightlyprocess;AccountKey=cSXQ+usNZR/rTHyrmePKIMgDuteKV3jfddagYsnkgL7MhtlKcV3byR720C5jkOH0CJjhA9ZQHyigmQipYtRluQ=="/>
+
       <Setting name="AzureDatabaseConnectionString" value="Server=tcp:mki9lbdl2h.database.windows.net;Database=Rounded;User ID=azureadmin@mki9lbdl2h;Password=Azure$Admin11;Trusted_Connection=False;Encrypt=True;" />
     </ConfigurationSettings>
   </Role>

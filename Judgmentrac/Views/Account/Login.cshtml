@@ -3,39 +3,35 @@
 @{
     ViewBag.Title = "Log in";
 }
-<div class="container">
-    <hgroup class="title">
-        <h1>@ViewBag.Title.</h1>
-    </hgroup>
-
+<div class="container" id="login-container">
     <div id="loginForm">
+        <hgroup class="title">
+            <h1>@ViewBag.Title</h1>
+        </hgroup>
+
         @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
-
-            <fieldset>
-                <legend>Log in Form</legend>
-                <ol>
-                    <li>
-                        @Html.LabelFor(m => m.UserName)
-                        @Html.TextBoxFor(m => m.UserName)
-                        @Html.ValidationMessageFor(m => m.UserName)
-                    </li>
-                    <li>
-                        @Html.LabelFor(m => m.Password)
-                        @Html.PasswordFor(m => m.Password)
-                        @Html.ValidationMessageFor(m => m.Password)
-                    </li>
-                    <li>
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                    </li>
-                </ol>
-                <input type="submit" value="Log in" class="btn btn-primary btn-xlarge" />
-            </fieldset>
             <p>
-                @Html.ActionLink("Register", "Register", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-xlarge" }) 
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </p>
+            <p>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </p>
+            <p>
+                <input type="submit" value="Log in" class="btn btn-primary" />
+                @Html.ActionLink("Register", "Register", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" }) 
             </p>
         }
+        Forgot Password?
+        <p class="foot-note">@Html.ActionLink("Click here to have a new one sent to you", "ForgotPassword")</p>
     </div>
 </div>

@@ -5,29 +5,38 @@
         <title>JudgmenTrac - @ViewBag.Title</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
         @Scripts.Render("~/bundles/jquery")
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+        @Scripts.Render("~/bundles/jqueryui")
+        <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
         @RenderSection("Scripts", required: false)
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var url = window.location.pathname;
+                // loop through every link from the navigation and highlight if on that page
+                $('.navbar .nav > li > a').each(function () {
+                    if ($(this).text() == "Tour" && url == "/") $(this).addClass('selected');
+                    if ($(this).text() == "My Judgments" && url == "/Judgment") $(this).addClass('selected');
+                });
+            });
+        </script>
     </head>
     <body>
         <header>
-            <div class="navbar">
+            <div class="navbar container">
                 <div class="navbar-inner">
-                    @Html.ActionLink("Judgment Tracker", "Index", "Home",htmlAttributes: new { @class = "brand" })
+                    @Html.ActionLink("Judgment Tracker", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "brand" })
                     <ul class="nav pull-right">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Pricing & Signup", "Index", "Pricing")</li>
+                        <li>@Html.ActionLink("Tour", "Index", "Home")</li>
                         <li>@Html.ActionLink("My Judgments", "Index", "Judgment")</li>
                         @if (!WebSecurity.IsAuthenticated) {
                             <li>@Html.ActionLink("Login", "Login", "Account")</li>
                         } else {
                             <li class="dropdown">@Html.Partial("_LoginPartial")</li>
-                            <!--
-                            <li>@* Html.ActionLink("Logout", "LogOff", "Account") *@</li>
-                            -->
-                            }
+                        }
                     </ul>
                   </div>
                 </div>
@@ -43,12 +52,16 @@
                 <div class="pull-left">
                     <h2 class="title">JudgmenTrac</h2>
                     <p>
-                        <a href="" class="foot-link">Home</a> | 
-                        <a href="" class="foot-link">Pricing & Signp</a> | 
-                        <a href="" class="foot-link">Support</a> | 
-                        <a href="" class="foot-link">Login</a>
+                        <a href="~/" class="foot-link">Tour</a> | 
+                        <a href="~/Judgment" class="foot-link">My Judgments</a>
                     </p>
-                    <p>Copyright &copy; Ben Essig</p>
+                    <p>
+                        Copyright &copy; JudgmenTrac
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        <a href="~/Home/TOS" class="foot-link">Terms of Service</a>
+                    </p>
                 </div>
                 <div class="pull-right poweredby">
                     <b>Powered By <a href="http://roundedco.com" target="_blank" class="foot-link">Rounded Development</a></b>

@@ -24,7 +24,39 @@ namespace Judgmentrac.Controllers
                 sbinary += buff[i].ToString("X2"); // hex format
             }
             return (sbinary);
-        } 
+        }
+
+        private bool DeleteInvoice(int invoiceID)
+        {
+            try
+            {
+                JudgmentDB db = new JudgmentDB();
+                UserProfileJudgment invoice = db.UserProfileJudgments.Find(invoiceID);
+                db.UserProfileJudgments.Remove(invoice);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool UpdateInvoice(int invoiceID, int numJudgments)
+        {
+            try
+            {
+                JudgmentDB db = new JudgmentDB();
+                UserProfileJudgment invoice = db.UserProfileJudgments.Find(invoiceID);
+                invoice.JudgmentCount = numJudgments;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         #endregion
 
         // GET: /Commerce/
@@ -124,16 +156,16 @@ namespace Judgmentrac.Controllers
                 if (response.Approved)
                 {
                     //get previously created invoice record and update with the correct judgments purchased
-                    JudgmentDB db = new JudgmentDB();
-                    int userID = Convert.ToInt32(post.Get("x_cust_id"));
-                    var invoice = (
-                        from i in db.UserProfileJudgments
-                        where i.UserId == userID && i.JudgmentCount == 0
-                        select i).Single();
-                    invoice.JudgmentCount = Convert.ToInt32(post.Get("num_judgment"));
-                    db.SaveChanges();
+                    //JudgmentDB db = new JudgmentDB();
+                    //int userID = Convert.ToInt32(post.Get("x_cust_id"));
+                    //var invoice = (
+                    //    from i in db.UserProfileJudgments
+                    //    where i.UserId == userID && i.JudgmentCount == 0
+                    //    select i).Single();
+                    //invoice.JudgmentCount = Convert.ToInt32(post.Get("num_judgment"));
+                    //db.SaveChanges();
 
-                    returnUrl = ConfigurationManager.AppSettings["AuthorizeReturnURL"] + "Commerce/Success?m=" + response.Message;
+                    returnUrl = ConfigurationManager.AppSettings["AuthorizeReturnURL"] + "Commerce/Success?n=" + post.Get("num_judgment") + "&i=" + post.Get("x_cust_id") + "&m=" + response.Message;
                 }
                 else
                 {
@@ -148,8 +180,36 @@ namespace Judgmentrac.Controllers
 
         public ActionResult Success()
         {
-            ViewBag.Message = Request.QueryString["m"];
-            return View();
+            try
+            {
+                ViewBag.Message = Request.QueryString["m"];
+                int userID = Convert.ToInt32(Request.QueryString["i"]);
+                int numJudgments = Convert.ToInt32(Request.QueryString["n"]);
+
+                JudgmentDB db = new JudgmentDB();
+                var invoice = (
+                    from i in db.UserProfileJudgments
+                    where i.UserId == userID && i.JudgmentCount == 0
+                    select i);
+                List<UserProfileJudgment> userProfileJudgmentList = invoice.ToList();
+
+                int index = 0;
+                int count = userProfileJudgmentList.Count();
+                foreach (UserProfileJudgment upg in userProfileJudgmentList)
+                {
+                    if (index + 1 < count)
+                        DeleteInvoice(upg.invoice);
+                    else
+                        UpdateInvoice(upg.invoice, numJudgments);
+                    index++;
+                }
+                return View();
+            }
+            catch
+            {
+                ViewBag.Message = "Error saving success data";
+                return View();
+            }
         }
 
 

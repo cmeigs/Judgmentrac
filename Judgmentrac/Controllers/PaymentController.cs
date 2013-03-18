@@ -9,16 +9,10 @@ using Judgmentrac.Models;
 
 namespace Judgmentrac.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private JudgmentDB db = new JudgmentDB();
-
-        // GET: /Payment/
-        public ActionResult Index()
-        {
-            return View(db.Payments.ToList());
-        }
-
 
         // GET: /Payment/Details/5
         public ActionResult Details(int id = 0)
@@ -35,6 +29,10 @@ namespace Judgmentrac.Controllers
         public ActionResult PartialDetails(int id = 0)
         {
             Dispute dispute = db.Disputes.Find(id);
+            // get associated payments and sort
+            db.Entry(dispute).Collection(p => p.Payments).Load();
+            dispute.Payments = dispute.Payments.AsQueryable().OrderBy(p => p.PayDate).ToList();
+            
             ViewBag.DisputeID = id;
             return PartialView("PartialDetails", dispute.Payments);
         }
@@ -64,13 +62,22 @@ namespace Judgmentrac.Controllers
                 Dispute dispute = db.Disputes.Find(payment.ID);
                 if (dispute != null)
                 {
-                    dispute.Payments.Add(new Payment
+                    try
                     {
-                        PayDate = payment.PayDate,
-                        Amount = payment.Amount
-                    });
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                        if (dispute.Payments == null) dispute.Payments = new List<Payment>();
+                        dispute.Payments.Add(new Payment
+                        {
+                            PayDate = payment.PayDate,
+                            Amount = payment.Amount
+                        });
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Judgment");
+                    }
+                    catch
+                    {
+                        ViewBag.ErrorMsg = "Error saving payment, please try again";
+                        return View();
+                    }
                 }
                 else
                     return HttpNotFound();
@@ -82,23 +89,9 @@ namespace Judgmentrac.Controllers
             }
         }
 
-        // POST: /Payment/Create/3
-        //[HttpPost]
-        //public ActionResult Create(Payment payment, int id = 0)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        Dispute dispute = db.Disputes.Find(id);
-        //        dispute.Payments.Add(payment);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index", "DisputeController");
-        //    }
-        //    return View(payment);
-        //}
 
-
-        // GET: /Payment/Edit/5
-        //public ActionResult Edit(int id = 0)
+        // GET: /Payment/Delete/5
+        //public ActionResult Delete(int id = 0)
         //{
         //    Payment payment = db.Payments.Find(id);
         //    if (payment == null)
@@ -109,40 +102,21 @@ namespace Judgmentrac.Controllers
         //}
 
 
-        // POST: /Payment/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(Payment payment)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(payment).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(payment);
-        //}
-
-        
-        // GET: /Payment/Delete/5
-        public ActionResult Delete(int id = 0)
-        {
-            Payment payment = db.Payments.Find(id);
-            if (payment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(payment);
-        }
-
-
         // POST: /Payment/Delete/5
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public bool Delete(int id)
         {
-            Payment payment = db.Payments.Find(id);
-            db.Payments.Remove(payment);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                Payment payment = db.Payments.Find(id);
+                db.Payments.Remove(payment);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 

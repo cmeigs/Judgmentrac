@@ -1,8 +1,16 @@
 ﻿@{
-    ViewBag.Title = "No Judgment";
+    ViewBag.Title = "No Judgments Available";
 }
 
-<div class="container">
-    <h2>No Judgments</h2>
-    @Html.ActionLink("Purchase Judgment", "Index", "Commerce", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-xlarge" })
+<div class="container" id="payment-container">
+    <div id="paymentForm">
+        
+        <hgroup class="title">
+            <h1>@ViewBag.Title</h1>
+        </hgroup>
+        
+        <p>You do not have any judgments available at this time, please click the button below to purchase </p>
+        <p>@Html.ActionLink("Purchase Judgment", "Index", "Commerce", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</p>
+    
+    </div>
 </div>

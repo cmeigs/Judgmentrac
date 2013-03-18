@@ -41,7 +41,9 @@
       <HintPath>..\packages\WindowsAzure.Storage.1.7.0.0\lib\net35-full\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,8 +57,16 @@
     <Compile Include="WorkerRole.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EmailTemplate.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

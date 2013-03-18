@@ -11,24 +11,54 @@ using WebMatrix.WebData;
 namespace Judgmentrac.Controllers
 {
     [Authorize]        
-    public class JudgmentController : Controller
+    public class JudgmentController : SuperController
     {
         private JudgmentDB db = new JudgmentDB();
 
 
         // GET: /Judgment/
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
-            var disputes = from j in db.Disputes
-                             where j.UserId == WebSecurity.CurrentUserId
-                             select j;
+            // do we have an error in the query string?
+            //string error = this.Request.QueryString["err"];
+            //if (error != "") ViewBag.ErrorMessage = error;
 
-            // create an instance of view model DisputeViewModel so we can take advantage of a computed property (not in DB)
-            IEnumerable<Dispute> disputeList = disputes.ToList();
+            // viewbag sort variables
+            ViewBag.NameSortParm = sortOrder == "Name" ? "Name desc" : "Name";
+            ViewBag.StartSortParm = sortOrder == "Start" ? "Start desc" : "Start";
+            ViewBag.EndSortParm = sortOrder == "End" ? "End desc" : "End";
+
+            IEnumerable<Dispute> disputeList = GetJudgmentsByUserId(WebSecurity.CurrentUserId);
+            
+            // create an instance of view model DisputeViewModel so we can take advantage of computed properties (not stored in DB)
             List<DisputeViewModel> disputeViewList = new List<DisputeViewModel>();
             foreach (Dispute dispute in disputeList)
                 disputeViewList.Add(new DisputeViewModel(dispute));
 
+            // sort
+            switch (sortOrder)
+            {
+                case "Name":
+                    disputeViewList = disputeViewList.OrderBy(s => s.Dispute.Name).ToList();
+                    break;
+                case "Name desc":
+                    disputeViewList = disputeViewList.OrderByDescending(s => s.Dispute.Name).ToList();
+                    break;
+                case "Start":
+                    disputeViewList = disputeViewList.OrderBy(s => s.Dispute.StartDate).ToList();
+                    break;
+                case "Start desc":
+                    disputeViewList = disputeViewList.OrderByDescending(s => s.Dispute.StartDate).ToList();
+                    break;
+                case "End":
+                    disputeViewList = disputeViewList.OrderBy(s => s.Dispute.EndDate).ToList();
+                    break;
+                case "End desc":
+                    disputeViewList = disputeViewList.OrderByDescending(s => s.Dispute.EndDate).ToList();
+                    break;
+            }
+
+            ViewBag.JudgmentCount = GetJudgmentCount();
             return View(disputeViewList);
         }
 
@@ -38,19 +68,10 @@ namespace Judgmentrac.Controllers
         {
             if (WebSecurity.IsAuthenticated)
             {
-                int userID = WebSecurity.CurrentUserId;
-
-                var userProfileJudgment = from upj in db.UserProfileJudgments
-                                          where upj.UserId == userID
-                                          select upj;
-
-                List<UserProfileJudgment> judgmentList = userProfileJudgment.ToList();
-                if (judgmentList.Count() > 0)
+                int judgmentCount = GetJudgmentCount();
+                if (judgmentCount > 0)
                 {
-                    int totalJudgmentCount = 0;
-                    foreach (UserProfileJudgment upj in judgmentList)
-                        totalJudgmentCount += upj.JudgmentCount;
-                    ViewBag.JudgmentCount = totalJudgmentCount;
+                    ViewBag.JudgmentCount = judgmentCount;
                     return View("Create");
                 }
                 else
@@ -67,33 +88,65 @@ namespace Judgmentrac.Controllers
         [HttpPost]
         public ActionResult Create(Dispute disputeInput)
         {
-            //needed for WebSecurity below
-            //WebSecurity.InitializeDatabaseConnection("JudgmentDB", "UserProfile", "UserId", "UserName", autoCreateTables: true);
             try
             {
-                using (var judgment = new JudgmentDB())
+                if (ModelState.IsValid)
                 {
-                    var dispute = new Dispute
+                    using (var judgment = new JudgmentDB())
                     {
-                        Name = disputeInput.Name,
-                        Principal = disputeInput.Principal,
-                        Rate = disputeInput.Rate,
-                        StartDate = disputeInput.StartDate,
-                        EndDate = disputeInput.EndDate,
-                        UserId = WebSecurity.CurrentUserId
-                    };
+                        var dispute = new Dispute
+                        {
+                            Name = disputeInput.Name,
+                            Principal = disputeInput.Principal,
+                            Rate = disputeInput.Rate,
+                            StartDate = disputeInput.StartDate,
+                            EndDate = disputeInput.EndDate,
+                            UserId = WebSecurity.CurrentUserId,
+                            IsActive = true
+                        };
 
-                    judgment.Disputes.Add(dispute);
-                    judgment.SaveChanges();
+                        judgment.Disputes.Add(dispute);
+                        judgment.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index", new { Message = "Judgment Successfully Created" });
                 }
-
-                return RedirectToAction("Index", new { Message = "Judgment Successfully Created" });
+                else
+                {
+                    ViewBag.ErrorMsg = "Error on form, please fix and resubmit";
+                    return View();
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.ErrorMsg = "Error adding judgment, please try again. " + ex.Message;
+                ViewBag.ErrorMsg = "Error adding judgment, please try again.";
                 return View();
             }
+        }
+
+
+        // POST: /Judgment/Delete/5
+        [HttpPost]
+        public bool Delete(int id)
+        {
+            try
+            {
+                Dispute dispute = db.Disputes.Find(id);
+                dispute.IsActive = false;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

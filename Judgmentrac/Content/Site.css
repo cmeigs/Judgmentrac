@@ -7,7 +7,7 @@ body {
     background-color: #000;
     color: #333;
     font-size: 15px;
-    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Open Sans", sans-serif;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -21,16 +21,17 @@ a {
     text-decoration: none;
 }
 
+/*
 a:link, a:visited, a:active, a:hover {
     color: #333;
 }
+*/
 
 a:hover {
     color: #c7d1d6;
 }
 
-h1, h2, h3,
-h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
     color: #000;
     margin-bottom: 0;
     padding-bottom: 0;
@@ -46,6 +47,7 @@ h2 {
 
 h3 {
     font-size: 1.2em;
+    
 }
 
 h4 {
@@ -64,6 +66,10 @@ h5, h6 {
 hgroup .title {
     text-align: center;
 }
+hgroup.title h1 
+{
+    margin-bottom: 20px;
+}
 
 .btn-xlarge {
   padding: 14px 25px;
@@ -73,7 +79,11 @@ hgroup .title {
      -moz-border-radius: 5px;
           border-radius: 5px;
 }
-
+.foot-note 
+{
+    margin-top: 20px;
+    font-size: small;
+}
 
 /* main layout
 ----------------------------------------------------------*/
@@ -81,16 +91,13 @@ body {
     background-color: #000;
     padding-bottom: 35px;
 }
-
 header {
     display: block;
     padding: 20px 0; 
     width: 100%;
     clear: both;
     background-color: #000;
-
 }
-
 .navbar
 {
     margin-bottom:0;
@@ -105,6 +112,7 @@ header {
 {
     color:#fff;
     text-shadow:none;
+    font-weight: bold;
 }
 .navbar .nav > li > a
 {
@@ -115,6 +123,10 @@ header {
 {
     color:#fff;
     text-shadow:none;
+}
+.navbar .nav .selected 
+{
+    color: #FFF;
 }
 .navbar .nav li.dropdown.open > .dropdown-toggle, .navbar .nav li.dropdown.active > .dropdown-toggle, .navbar .nav li.dropdown.open.active > .dropdown-toggle
 {
@@ -179,7 +191,7 @@ footer .poweredby
 }
 .errorMsg 
 {
-    color: Red;
+    color: #E80C4D;
     font-weight: bold;
 }
 .section
@@ -192,8 +204,12 @@ footer .poweredby
 ----------------------------------------------------------*/
 #home-top  {
     background-color: #4F4F4F;
-    color: #ffffff;
+    color: #CCCCCC;
     width: 100%;
+}
+#home-top h3 
+{
+    color: #FFF;
 }
 #home-top .container {
     height: 350px;
@@ -216,44 +232,6 @@ footer .poweredby
 {
     height: 350px;
     padding: 50px 0 30px 0;
-}
-
-
-/* Pricing Page
-----------------------------------------------------------*/
-.pricing-container {
-    position: relative;
-    height: 300px;
-}
-.pricing-container .separator-top {
-    position: absolute;
-}
-.pricing-container .separator-bottom {
-    position: absolute;
-    bottom: 0px;
-}
-.pricing-container .left {
-    float:left;
-    height: 100%;
-    width: 438px;
-    border-right: 2px solid #F1F1F1;
-}
-.pricing-container .left .left-content {
-    margin: 25px 0 0 25px;
-}
-.pricing-container .right-content {
-    float: right;
-    height: 100%;
-    width: 438px;
-    margin: 25px 25px 0 0;
-}
-.left-content ul {
-    list-style-image:url('../Images/green_circle.png');
-}
-.container .signup {
-    position: relative;
-    width: 100%;
-    float: right;
 }
 
 
@@ -309,12 +287,13 @@ footer .poweredby
     }
 
 
-/* My Judgements*/
-----------------------------------------------------------
+/* My Judgements
+----------------------------------------------------------*/
 
 .title-section
 {
-    padding:30px 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 .table th
 {
@@ -337,35 +316,62 @@ footer .poweredby
 .table td
 {
     font-size:17px;
-    
 }
 .table td, .table th
 {
-    text-align:right;
-    width:12%;
+    text-align: left;
+    width: 11%;
+    padding-left:0;
+    font-size:15px;
 }
-.table td.left, .table th.left
+.table td.dispute-name, .table th.dispute-name
 {
-    text-align:left;
-    width:28%;
+    text-align: left;
+    width: 19%;
+    padding-left: 5px;
 }
-
-.main-table td
+.table td.expand, .table th.expand
 {
- 
+    width: 2%;
+}
+.table td.trash, .table th.trash
+{
+    width: 2%
+}
+.main-table .dispute-parent-row td
+{
     padding:15px 0;
 }
-
 .main-table tr:hover
 {
-    background:#fdfdfd;
-    cursor:pointer;
+    background: #E5ECFC;
+    cursor: pointer;
 }
 .main-table tr.payments td
 {
     border-top:0px;
     background:#fdfdfd;
 }
+.main-table tr.payments
+{
+    position: relative;
+}
+.main-table tr.payments .close
+{
+    position: relative;
+    top: -60px;
+    right: -20px;
+    color: #000;
+    font-size: 16px;
+    opacity: 1;
+}
+.paymentrow
+{
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+
 /* menu
 ----------------------------------------------------------*/
 #menu {
@@ -398,13 +404,43 @@ footer .poweredby
             text-decoration: none;
         }
 
-
-/* login page */
-#loginForm {
-    float: left;
-    width: 55%;
+/* payment page */
+#paymentForm 
+{
+    text-align: left;
+    margin-top: 25px;
+}
+#payment-container
+{
+    width: 400px;
 }
 
+
+/* registration page */
+#registerForm, #manageForm
+{
+    text-align: left;
+    margin-top: 25px;
+}
+#register-container
+{
+    width: 350px;
+}
+#manage-container
+{
+    width: 400px;
+}
+
+/* login page */
+#loginForm 
+{
+    text-align: left;
+    margin-top: 25px;
+}
+#login-container
+{
+    width: 300px;
+}
     #loginForm .validation-error {
         display: block;
         margin-left: 15px;
@@ -524,14 +560,7 @@ textarea {
     input[type="submit"],
     input[type="button"],
     button {
-        background-color: #d3dce0;
-        border: 1px solid #787878;
-        cursor: pointer;
-        font-size: 1.2em;
-        font-weight: 600;
-        padding: 7px;
-        margin-right: 8px;
-        width: auto;
+        margin-top:0;
     }
 
     td input[type="submit"],
@@ -558,7 +587,7 @@ textarea {
 }
 
 .message-success {
-    color: #7ac0da;
+    color: #37DC37;
     font-size: 1.3em;
     font-weight: bold;
     margin: 20px 0 10px 0;
@@ -619,14 +648,14 @@ th {
     }
 
     th a:link, th a:visited, th a:active, th a:hover {
-        color: #333;
-        font-weight: 600;
+        color: #FFF;
+        font-weight: bold;
         text-decoration: none;
         padding: 0;
     }
 
     th a:hover {
-        color: #000;
+        color: #FFF;
     }
 
     th.asc a, th.desc a {

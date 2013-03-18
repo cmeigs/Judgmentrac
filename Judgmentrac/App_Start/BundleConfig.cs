@@ -25,6 +25,7 @@ namespace Judgmentrac
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
+                "~/Content/jqueryui_essig/jqueryui_essig.css",
                 "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
